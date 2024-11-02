@@ -10,24 +10,45 @@ interface message {
 
 const ChatComponent = () => {
 
+    const helpText: string = `
+        HELP TEXT
+    `;
+
     const [inputText, setInputText] = useState<string>('');
 
     const [messageLog, setMessageLog] = useState<message[]>([
         {
             text: "Hello 👋, I am your portfolio assistant.",
             who: "bot"
+        },
+        {
+            text: "Type 'help' if you're not sure where to start!",
+            who: "bot"
         }
     ]);
 
+    const checkForKeyWord = () => {
+        const trimmedInput = inputText.trim();
+        if(trimmedInput === "help"){
+            addTextBubble(helpText, "bot");
+        }
+    }
+
     const onKeyClicked = (event: KeyboardEvent<HTMLTextAreaElement>) => {
         if(event.key === "Enter"){
+
             event.preventDefault();
             addTextBubble(inputText, "user");
             setInputText('');
+
+            checkForKeyWord();
         }
     }
     
     const addTextBubble = (text: string, who: "bot" | "user") => {
+        if(inputText.trim() === ''){
+            return;
+        }
         messageLog.push({
             text,
             who
