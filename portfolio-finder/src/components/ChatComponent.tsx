@@ -12,7 +12,10 @@ interface Message {
 }
 
 const ChatComponent = () => {
-    const helpText: string = `Help Text`;
+    const helpText: string = `
+        'clear': clears the message log 
+        'example': give me an example input
+    `;
 
     const [inputText, setInputText] = useState<string>("");
     const [messageLog, setMessageLog] = useState<Message[]>([
@@ -20,10 +23,10 @@ const ChatComponent = () => {
         { text: "Type 'help' if you're not sure where to start!", who: "bot" }
     ]);
 
-    const chatEndRef = useRef<HTMLDivElement>(null);  // Ref for the end of the chat container
-    const validCommands: string[] = ["help", "clear"];
+    const chatEndRef = useRef<HTMLDivElement>(null);
+    const validCommands: string[] = ["help", "clear", "example"];
 
-    // Scroll to bottom on new message
+    // Scroll to bottom of message div
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messageLog]);
@@ -36,7 +39,20 @@ const ChatComponent = () => {
         if (trimmedInput === "clear") {
             clearMessageLog();
         }
+        if (trimmedInput === "example") {
+            giveExample();
+        }
     };
+
+    const giveExample = () => {
+        const examples: string[] = [
+            "ex. I don't like to take risks and I have a moderate amount of time to invest for. I like the IT industry right now, I want to invest in those companies.",
+            "ex. I need to take a big risk on an investment because I don't have a lot of time. Pick any industry you want."
+        ];
+        for(let example of examples){
+            addTextBubble(example, "bot")
+        }
+    }
 
     const clearMessageLog = () => {
         setMessageLog([
@@ -58,6 +74,10 @@ const ChatComponent = () => {
 
             if (containsKeyWord()) {
                 giveKeyWordResponse();
+                return;
+            }
+            if(inputText.length < 20) {
+                addTextBubble("I need a little more info than that to help you out!", "bot");
                 return;
             }
 

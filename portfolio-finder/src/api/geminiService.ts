@@ -31,6 +31,8 @@ async function run(userInput: string): Promise<string> {
 
         You should return the following and nothing else: 
 
+        If the user gave completely irrelevant input, ask them to give more information relating to risk, time they have, industries they like, and other useful info
+
         A value between 1 and 10 signifying what the time horizon of the user’s desired returns is, with 1 being very short term returns and 10 being very long term returns 
         A value between 1 and 10 signifying the risk vs return profile that the user wants, with 1 signifying very high risk but very high potential return and 10 signifying very low risk with smaller but more steady returns 
         A one-hot encoded vector of the sectors the user seems to be interested in. Keep in mind the user was asked if there are any particular sectors they are interested in, but you if they do not specify any particular sectors they are interested in, you should return the on-hot encoded vector filled with zeros. A 1 indicates interest in a given sector and a 0 indicates no interest in a given sector. The order of the sectors in the one-hot encoded vector should be [information technology, health care, financials, consumer discretionary, communication services, industrials, consumer staples, energy, utilities, real estate, materials].
