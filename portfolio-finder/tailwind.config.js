@@ -6,13 +6,19 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"), require("tailwindcss-animate")],
   theme: {
-    extend: {
-      fontFamily: {
-        istok: ['"Istok Web"', 'sans-serif'],
-        grotesk: ['"Space Grotesk"', 'sans-serif'],
-      }
-    }
+  	extend: {
+  		fontFamily: {
+  			istok: ['Istok Web"', 'sans-serif'],
+  			grotesk: ['Space Grotesk"', 'sans-serif']
+  		},
+  		borderRadius: {
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		colors: {}
+  	}
   },
 }
