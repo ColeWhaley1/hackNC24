@@ -3,14 +3,16 @@
 export default {
   darkMode: ["class"],
   content: [
-  "./index.html",
-  "./src/**/*.{js,ts,jsx,tsx}",
-],
-theme: {
-  extend: {
-    fontFamily:{
-      "main": ["space-grotesk", "sans-serif"]
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  plugins: [require("daisyui")],
+  theme: {
+    extend: {
+      fontFamily: {
+        istok: ['"Istok Web"', 'sans-serif'],
+        grotesk: ['"Space Grotesk"', 'sans-serif'],
+      }
     }
-  }
-},
+  },
 }

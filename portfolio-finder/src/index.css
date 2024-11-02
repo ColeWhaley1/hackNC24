@@ -3,7 +3,21 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: "space-grotesk";
-    src: url("./assets/fonts/Space_Grotesk/Space_Grotesk/SpaceGrotesk-Regular.ttf");
+    font-family: "Istok Web";
+    src: url("./assets/fonts/Space_Grotesk/Space_Grotesk/static/SpaceGrotesk-Regular.ttf") format("truetype");
     font-style: normal;
+    font-weight: 400;
 }
+
+body {
+    font-family: "Istok Web", sans-serif; /* set default font for project */
+}
+
+html, body {
+    background-color: #2a95bf;
+    height: 100%;
+    overflow: hidden;
+    height: 100%;
+    color: white;
+}
+
