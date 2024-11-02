@@ -2,6 +2,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { KeyboardEvent, useState } from "react";
 import UserTextBubble from "./UserTextBubble";
 import BotTextBubble from "./BotTextBubble";
+import geminiService from "@/api/geminiService";
 
 interface message {
     text: string,
@@ -11,7 +12,7 @@ interface message {
 const ChatComponent = () => {
 
     const helpText: string = `
-        HELP TEXT
+        Help Text
     `;
 
     const [inputText, setInputText] = useState<string>('');
@@ -34,7 +35,7 @@ const ChatComponent = () => {
         }
     }
 
-    const onKeyClicked = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    const onKeyClicked = async (event: KeyboardEvent<HTMLTextAreaElement>) => {
         if(event.key === "Enter"){
 
             event.preventDefault();
@@ -42,6 +43,11 @@ const ChatComponent = () => {
             setInputText('');
 
             checkForKeyWord();
+
+            const response = await geminiService(inputText);
+            console.log(response);
+
+            addTextBubble(response, "bot");
         }
     }
     
@@ -49,6 +55,7 @@ const ChatComponent = () => {
         if(inputText.trim() === ''){
             return;
         }
+        console.log("push message")
         messageLog.push({
             text,
             who
@@ -56,14 +63,14 @@ const ChatComponent = () => {
     }
 
     return (
-        <div id="chat-div" className="bg-blue-100 rounded-lg p-12 text-lg space-y-8">
-            {messageLog.map((message) => (
+        <div id="chat-div" className="bg-blue-100 rounded-lg p-12 text-lg space-y-8 overflow-y-auto">
+            {messageLog.map((message, index) => (
                 message.who === 'user' ? (
-                    <UserTextBubble>
+                    <UserTextBubble key={index}>
                         {message.text}
                     </UserTextBubble>
                 ) : (
-                    <BotTextBubble>
+                    <BotTextBubble key={index}>
                         {message.text}
                     </BotTextBubble>
                 )
