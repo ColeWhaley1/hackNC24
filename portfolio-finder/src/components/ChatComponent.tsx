@@ -1,85 +1,99 @@
-import { Textarea } from "@/components/ui/textarea"
-import { KeyboardEvent, useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { KeyboardEvent, useState, useRef, useEffect } from "react";
 import UserTextBubble from "./UserTextBubble";
 import BotTextBubble from "./BotTextBubble";
 import geminiService from "@/api/geminiService";
 
-interface message {
-    text: string,
+// chatgpt used to create auto-scroll to bottom of chat div
+
+interface Message {
+    text: string;
     who: "bot" | "user";
 }
 
 const ChatComponent = () => {
+    const helpText: string = `Help Text`;
 
-    const helpText: string = `
-        Help Text
-    `;
-
-    const [inputText, setInputText] = useState<string>('');
-
-    const [messageLog, setMessageLog] = useState<message[]>([
-        {
-            text: "Hello 👋, I am your portfolio assistant.",
-            who: "bot"
-        },
-        {
-            text: "Type 'help' if you're not sure where to start!",
-            who: "bot"
-        }
+    const [inputText, setInputText] = useState<string>("");
+    const [messageLog, setMessageLog] = useState<Message[]>([
+        { text: "Hello 👋, I am your portfolio assistant.", who: "bot" },
+        { text: "Type 'help' if you're not sure where to start!", who: "bot" }
     ]);
 
-    const checkForKeyWord = () => {
+    const chatEndRef = useRef<HTMLDivElement>(null);  // Ref for the end of the chat container
+    const validCommands: string[] = ["help", "clear"];
+
+    // Scroll to bottom on new message
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messageLog]);
+
+    const giveKeyWordResponse = () => {
         const trimmedInput = inputText.trim();
-        if(trimmedInput === "help"){
+        if (trimmedInput === "help") {
             addTextBubble(helpText, "bot");
         }
+        if (trimmedInput === "clear") {
+            clearMessageLog();
+        }
+    };
+
+    const clearMessageLog = () => {
+        setMessageLog([
+            { text: "Hello 👋, I am your portfolio assistant.", who: "bot" },
+            { text: "Type 'help' if you're not sure where to start!", who: "bot" }
+        ]);
     }
+
+    const containsKeyWord = (): boolean => {
+        const trimmedInput = inputText.trim();
+        return validCommands.includes(trimmedInput);
+    };
 
     const onKeyClicked = async (event: KeyboardEvent<HTMLTextAreaElement>) => {
-        if(event.key === "Enter"){
-
+        if (event.key === "Enter") {
             event.preventDefault();
             addTextBubble(inputText, "user");
-            setInputText('');
+            setInputText("");
 
-            checkForKeyWord();
+            if (containsKeyWord()) {
+                giveKeyWordResponse();
+                return;
+            }
 
             const response = await geminiService(inputText);
-            console.log(response);
-
             addTextBubble(response, "bot");
         }
-    }
-    
+    };
+
     const addTextBubble = (text: string, who: "bot" | "user") => {
-        if(inputText.trim() === ''){
+        if (text.trim() === "") {
             return;
         }
-        console.log("push message")
-        messageLog.push({
-            text,
-            who
-        });
-    }
+        setMessageLog((prevLog) => [...prevLog, { text, who }]);
+    };
 
     return (
-        <div id="chat-div" className="bg-blue-100 rounded-lg p-12 text-lg space-y-8 overflow-y-auto">
-            {messageLog.map((message, index) => (
-                message.who === 'user' ? (
-                    <UserTextBubble key={index}>
-                        {message.text}
-                    </UserTextBubble>
+        <div id="chat-div" className="bg-blue-100 rounded-lg p-12 text-lg space-y-8 max-h-[35rem] overflow-y-auto">
+            {messageLog.map((message, index) =>
+                message.who === "user" ? (
+                    <UserTextBubble key={index}>{message.text}</UserTextBubble>
                 ) : (
-                    <BotTextBubble key={index}>
-                        {message.text}
-                    </BotTextBubble>
+                    <BotTextBubble key={index}>{message.text}</BotTextBubble>
                 )
-            ))}
+            )}
+            {/* used to autoscroll */}
+            <div ref={chatEndRef} />
             <div className="bg-white rounded-lg border border-black text-black">
-                <Textarea value={inputText} onKeyDown={onKeyClicked} onChange={(e) => setInputText(e.target.value)} className="text-lg"/>
+                <Textarea
+                    value={inputText}
+                    onKeyDown={onKeyClicked}
+                    onChange={(e) => setInputText(e.target.value)}
+                    className="text-lg"
+                />
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ChatComponent;
