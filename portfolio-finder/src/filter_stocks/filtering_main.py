@@ -1,19 +1,17 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM 
-import torch 
 import pandas as pd 
 from tqdm import tqdm 
 import numpy as np 
 import yfinance as yf 
+import os
 
 
-def stock_filtering(horizon,risk,one_hot_vector,file_path): 
+def stock_filtering(horizon,risk,one_hot_vector): 
 
-    ticker_class, index_class = get_stock_classes('1h','2024-10-20','2024-10-30',['Open','High','Low','Close','Volume','Dividends','Stock Splits' ],one_hot_vector,file_path)
+    ticker_class, index_class = get_stock_classes('1h','2024-10-20','2024-10-30',['Open','High','Low','Close','Volume','Dividends','Stock Splits' ],one_hot_vector)
     test_dict = {'Symbol':'AAPL','Amount':123}
 
 
-
-def sector_filtering(one_hot_vector,file_path):
+def sector_filtering(one_hot_vector):
 
     sectors = ['Information Technology','Health Care','Financials','Consumer Discretionary','Communication Services','Industrials','Consumer Staples','Energy','Utilities','Real Estate','Materials']
     selected_sectors = []
@@ -21,7 +19,9 @@ def sector_filtering(one_hot_vector,file_path):
         if one_hot_vector[i] == 1: 
             selected_sectors.append(sectors[i])
 
-    with open(file_path,'r') as spreadsheet: 
+    companies_path = "./src/filter_stocks/sp500_companies.csv"
+
+    with open(companies_path,'r') as spreadsheet: 
         df = pd.read_csv(spreadsheet)
 
     filtered_df = df[df.Sector.isin(selected_sectors)]
@@ -95,9 +95,9 @@ class Ticker_Attributes:
         return results 
     
 
-def get_stock_classes(interval,start_date,end_date,values,one_hot_vector,file_path):
+def get_stock_classes(interval,start_date,end_date,values,one_hot_vector):
 
-    df = sector_filtering(one_hot_vector,file_path)
+    df = sector_filtering(one_hot_vector)
     stock_group, index_group = get_ticker_objects(df,interval,start_date,end_date,values)
     ticker_class = Ticker_Attributes(stock_group)
     index_class = Ticker_Attributes(index_group)
@@ -116,52 +116,16 @@ def calculate_covariance(set1,set2):
 
     set1 = np.array(set1)
     set2 = np.array(set2)
-    test_covariance = np.cov(set1,set2)
-    test_covariance = test_covariance[0,1]
-    return test_covariance 
-
-def get_beta(stock_set,index_set): 
-
-    covariance = calculate_covariance(stock_set,index_set)
-    index_variance = np.var(np.array(index_set))
-    beta = covariance / index_variance 
-    return beta 
-
-def get_maximum_drawdown(value_array,symbol):
-    #should be used more for daily calculations and short term calculations 
-
-    value_array = value_array[symbol]
-    
-    l = 0 
-    r = 1 
-    mdd = 0 
-
-    print(value_array)
-
-    while r < len(value_array) -1: 
-        if value_array[r] >= value_array[l]:
-            l = r 
-        else: 
-            mdd = min(mdd, value_array[r] - value_array[l])
-        r+= 1 
-
-    return mdd 
-
-
-
-
-
-
-
-    
-
-
-
-    
-
-
-
-
+    mean1 = np.mean(set1)
+    mean2 = np.mean(set2)
+    var1 = 0 
+    var2 = 0 
+    length = len(set1) 
+    for i in range(0,length):
+        var1 += (set1[i] - mean1)
+        var2 += (set2[i] - mean2)
+    covariance = (var1 * var2) / length 
+    return covariance 
 
 
 
@@ -173,12 +137,12 @@ def get_maximum_drawdown(value_array,symbol):
     
 
 
-# def maxiumum_drawdown(values):
+def maxiumum_drawdown(values):
 
-#     print()
+    print()
 
 
-# test_dict = stock_filtering(2,3,[1,1,1,1,1,1,1,1,1,1,1],'/Users/henry/Computer_Science/hackNC24/sp500_companies.csv')
+test_dict = stock_filtering(2,3,[1,1,1,1,1,1,1,1,1,1,1])
 
 
 
@@ -200,21 +164,17 @@ def get_maximum_drawdown(value_array,symbol):
 
 
 
-one_hot_vector = [1,1,1,1,1,1,1,1,1,1,1]
-file_path = '/Users/henry/Computer_Science/hackNC24/sp500_companies.csv'
-df = sector_filtering(one_hot_vector,file_path)
-stock_group,index_group = get_ticker_objects(df,'1h','2024-10-20','2024-10-31',['Open','High','Low','Close','Volume','Dividends','Stock Splits'])
-ticker_class = Ticker_Attributes(stock_group)
-index_class = Ticker_Attributes(index_group)
-open_only = ticker_class.get_attribute('Open')
-close_only = ticker_class.get_attribute('Close')
-print(open_only['GOOG'])
-open_index_only = index_class.get_attribute('Open')
-print(open_index_only['SPY'])
-standard_deviation = get_standard_deviation(open_only['GOOG'])
-beta = get_beta(open_only['GOOG'],open_index_only['SPY'])
-daily_drawdown = get_maximum_drawdown(close_only,'GOOG')
-print(daily_drawdown)
+# one_hot_vector = [1,1,1,1,1,1,1,1,1,1,1]
+# file_path = '/Users/henry/Computer_Science/hackNC24/sp500_companies.csv'
+# df = sector_filtering(one_hot_vector,file_path)
+# stock_group,index_group = get_ticker_objects(df,'1h','2024-10-20','2024-10-31',['Open','High','Low','Close','Volume','Dividends','Stock Splits'])
+# ticker_class = Ticker_Attributes(stock_group)
+# index_class = Ticker_Attributes(index_group)
+# volume_only = ticker_class.get_attribute('Volume')
+# index_volume_only = index_class.get_attribute('Volume')
+# print(volume_only['GOOG'])
+# standard_deviation = get_standard_deviation(volume_only['GOOG'])
+# print(standard_deviation)
 
 
 
