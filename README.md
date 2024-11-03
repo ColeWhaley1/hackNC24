@@ -1,4 +1,4 @@
-# App Name Placeholder
+# AI-powered Investment Portfolio Creator
 
 A full-stack web application designed to help beginner stock investors create personalized portfolios based on their preferences.
 The app generates a tailored portfolio based off of user responses to the given prompts.
