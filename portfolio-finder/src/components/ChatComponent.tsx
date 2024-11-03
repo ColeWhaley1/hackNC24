@@ -2,7 +2,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { KeyboardEvent, useState, useRef, useEffect } from "react";
 import UserTextBubble from "./UserTextBubble";
 import BotTextBubble from "./BotTextBubble";
-import geminiService from "@/api/geminiService";
+import geminiService from "../gemini_api/geminiService";
 
 // chatgpt used to create auto-scroll to bottom of chat div
 

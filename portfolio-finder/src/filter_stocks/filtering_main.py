@@ -1,19 +1,17 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM 
-import torch 
 import pandas as pd 
 from tqdm import tqdm 
 import numpy as np 
 import yfinance as yf 
+import os
 
 
-def stock_filtering(horizon,risk,one_hot_vector,file_path): 
+def stock_filtering(horizon,risk,one_hot_vector): 
 
-    ticker_class, index_class = get_stock_classes('1h','2024-10-20','2024-10-30',['Open','High','Low','Close','Volume','Dividends','Stock Splits' ],one_hot_vector,file_path)
+    ticker_class, index_class = get_stock_classes('1h','2024-10-20','2024-10-30',['Open','High','Low','Close','Volume','Dividends','Stock Splits' ],one_hot_vector)
     test_dict = {'Symbol':'AAPL','Amount':123}
 
 
-
-def sector_filtering(one_hot_vector,file_path):
+def sector_filtering(one_hot_vector):
 
     sectors = ['Information Technology','Health Care','Financials','Consumer Discretionary','Communication Services','Industrials','Consumer Staples','Energy','Utilities','Real Estate','Materials']
     selected_sectors = []
@@ -21,7 +19,9 @@ def sector_filtering(one_hot_vector,file_path):
         if one_hot_vector[i] == 1: 
             selected_sectors.append(sectors[i])
 
-    with open(file_path,'r') as spreadsheet: 
+    companies_path = "./src/filter_stocks/sp500_companies.csv"
+
+    with open(companies_path,'r') as spreadsheet: 
         df = pd.read_csv(spreadsheet)
 
     filtered_df = df[df.Sector.isin(selected_sectors)]
@@ -95,9 +95,9 @@ class Ticker_Attributes:
         return results 
     
 
-def get_stock_classes(interval,start_date,end_date,values,one_hot_vector,file_path):
+def get_stock_classes(interval,start_date,end_date,values,one_hot_vector):
 
-    df = sector_filtering(one_hot_vector,file_path)
+    df = sector_filtering(one_hot_vector)
     stock_group, index_group = get_ticker_objects(df,interval,start_date,end_date,values)
     ticker_class = Ticker_Attributes(stock_group)
     index_class = Ticker_Attributes(index_group)
@@ -142,7 +142,7 @@ def maxiumum_drawdown(values):
     print()
 
 
-test_dict = stock_filtering(2,3,[1,1,1,1,1,1,1,1,1,1,1],'/Users/henry/Computer_Science/hackNC24/sp500_companies.csv')
+test_dict = stock_filtering(2,3,[1,1,1,1,1,1,1,1,1,1,1])
 
 
 
