@@ -6,6 +6,8 @@ import geminiService from "../gemini_api/geminiService";
 import getStocksFromGeminiResponse from "@/services/getStocksFromGeminiResponse";
 import getLogoFromTicker from "@/services/getLogoFromTicker";
 
+// GPT helped provide code to get logos
+
 interface Message {
     text: string;
     who: "bot" | "user";
@@ -99,6 +101,7 @@ const ChatComponent = () => {
             }
 
             const response = await geminiService(inputText);
+            console.log(response)
             const stocks = await getStocksFromGeminiResponse(response);
             
             setMessageLog((prevLog) => [...prevLog, { text: "Here are some stocks I found:", who: "bot" }]);
