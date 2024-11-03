@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from filter_stocks import filtering_main
+from filter_stocks import filtering_main, get_logo_from_ticker
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -16,6 +16,18 @@ def filter_stocks():
     result = filtering_main.stock_filtering(horizon, risk, ohv)
     
     return jsonify(result)
+
+@app.route('/api/get_logo', methods=['POST'])
+def get_logo():
+    data = request.get_json()
+
+    ticker = data["ticker"]
+
+    result = get_logo_from_ticker.get_logo_from_ticker(ticker)
+    
+    return jsonify({
+        "logo": result
+    })
 
 if __name__ == '__main__':
     app.run(port = 5001, debug=True)

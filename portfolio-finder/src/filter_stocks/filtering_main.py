@@ -8,7 +8,7 @@ import os
 def stock_filtering(horizon,risk,one_hot_vector): 
 
     ticker_class, index_class = get_stock_classes('1h','2024-10-20','2024-10-30',['Open','High','Low','Close','Volume','Dividends','Stock Splits' ],one_hot_vector)
-    test_dict = {'Symbol':'AAPL','Amount':123}
+    test_dict = [{'Symbol':'AAPL','Amount':123}]
     return test_dict
 
 

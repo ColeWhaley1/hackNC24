@@ -24,9 +24,9 @@ const getStocksFromGeminiReponse = async (
     gemini_response: string
 ) => {
     const filter_data = parseGeminiResponse(gemini_response);
+    console.log(filter_data)
 
     try {
-        console.log(JSON.stringify(filter_data))
         const response = await fetch("http://localhost:5001/api/filter_stocks", {
             method: "POST",
             headers: {
@@ -40,31 +40,11 @@ const getStocksFromGeminiReponse = async (
         }
 
         const result = await response.json();
-        console.log(result);
+
         return result;
     } catch (error) {
         
     }
-
-    // try {
-    //     const response = await fetch(url, {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(data),
-    //     });
-
-    //     if (!response.ok) {
-    //         throw new Error(`HTTP error! Status: ${response.status}`);
-    //     }
-
-    //     const result: FilterStocksResponse = await response.json();
-    //     console.log("API Response:", result);
-    //     return result;
-    // } catch (error) {
-    //     console.error("Error calling filter stocks API:", error);
-    // }
 }
 
 export default getStocksFromGeminiReponse;
