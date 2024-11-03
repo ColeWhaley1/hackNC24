@@ -32,5 +32,5 @@ The stocks included in the portfolio are selected based on the following three k
 - **API Ninjas**: Utilized for styling the frontend and enhancing user experience.
 
 ## Acknowledgments
-ChatGPT was used for formatting the README.md, testing and debugging sections of code at a time
+ChatGPT was used for formatting the README.md, testing and debugging sections of code at a time. It was also used to provide the code to get the ticker logos.
 
