@@ -113,7 +113,7 @@ const ChatComponent = () => {
                 if (logoUrl) {
                     addLogoBubble(logoUrl, stock["Symbol"], stock["Amount"]); // Display the logo properly
                 } else {
-                    addTextBubble(`No logo found for ${stock["Symbol"]}`, "bot");
+                    addTextBubble(`No logo found for ${stock["Symbol"]}`, "bot", undefined, stock["Amount"]);
                 }
             }
         }

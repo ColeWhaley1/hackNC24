@@ -18,7 +18,8 @@ def stock_filtering(horizon,risk,one_hot_vector):
 
 def sector_filtering(one_hot_vector):
 
-    sectors = ['Technology','Health Care','Financials','Consumer Discretionary','Communication Services','Industrials','Consumer Staples','Energy','Utilities','Real Estate','Materials']
+    sectors = ['Technology', 'Healthcare','Financial Services', 'Consumer Cyclical', 'Communication Services', 'Industrials', 'Consumer Defensive', 'Energy', 'Utilities', 'Real Estate', 'Basic Materials']  
+
     selected_sectors = []
     for i in range(0,11):
         if one_hot_vector[i] == 1: 
