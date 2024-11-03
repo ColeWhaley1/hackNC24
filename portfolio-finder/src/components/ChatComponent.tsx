@@ -3,6 +3,7 @@ import { KeyboardEvent, useState, useRef, useEffect } from "react";
 import UserTextBubble from "./UserTextBubble";
 import BotTextBubble from "./BotTextBubble";
 import geminiService from "../gemini_api/geminiService";
+import getStocksFromGeminiResponse from "@/services/getStocksFromGeminiResponse";
 
 // chatgpt used to create auto-scroll to bottom of chat div
 
@@ -32,7 +33,7 @@ const ChatComponent = () => {
     }, [messageLog]);
 
     const giveKeyWordResponse = () => {
-        const trimmedInput = inputText.trim();
+        const trimmedInput = inputText.trim().toLowerCase();
         if (trimmedInput === "help") {
             addTextBubble(helpText, "bot");
         }
@@ -62,7 +63,7 @@ const ChatComponent = () => {
     }
 
     const containsKeyWord = (): boolean => {
-        const trimmedInput = inputText.trim();
+        const trimmedInput = inputText.trim().toLowerCase();
         return validCommands.includes(trimmedInput);
     };
 
@@ -82,6 +83,9 @@ const ChatComponent = () => {
             }
 
             const response = await geminiService(inputText);
+
+            const stocks = getStocksFromGeminiResponse(response);
+            
             addTextBubble(response, "bot");
         }
     };
@@ -117,3 +121,5 @@ const ChatComponent = () => {
 };
 
 export default ChatComponent;
+
+
