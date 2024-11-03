@@ -18,7 +18,7 @@ def stock_filtering(horizon,risk,one_hot_vector):
 
 def sector_filtering(one_hot_vector):
 
-    sectors = ['Information Technology','Health Care','Financials','Consumer Discretionary','Communication Services','Industrials','Consumer Staples','Energy','Utilities','Real Estate','Materials']
+    sectors = ['Technology','Health Care','Financials','Consumer Discretionary','Communication Services','Industrials','Consumer Staples','Energy','Utilities','Real Estate','Materials']
     selected_sectors = []
     for i in range(0,11):
         if one_hot_vector[i] == 1: 
@@ -29,7 +29,7 @@ def sector_filtering(one_hot_vector):
     with open(companies_path,'r') as spreadsheet: 
         df = pd.read_csv(spreadsheet)
 
-    filtered_df = df[df.Sector.isin(selected_sectors)]
+    filtered_df = df[df["Sector"].isin(selected_sectors)]
 
     return filtered_df 
 
