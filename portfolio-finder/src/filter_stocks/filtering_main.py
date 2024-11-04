@@ -2,7 +2,6 @@ import pandas as pd
 from tqdm import tqdm 
 import numpy as np 
 import yfinance as yf 
-import os
 
 
 def stock_filtering(horizon,risk,one_hot_vector): 
@@ -10,7 +9,6 @@ def stock_filtering(horizon,risk,one_hot_vector):
     if(not 1 in one_hot_vector):
         one_hot_vector = [1,1,1,1,1,1,1,1,1,1,1]
 
-    ticker_class, index_class = get_stock_classes('1h','2024-10-20','2024-10-30',['Open','High','Low','Close','Volume','Dividends','Stock Splits' ],one_hot_vector)
     weights,tickers = value_filtering2(horizon,risk,one_hot_vector,'1d','2024-5-20','2024-10-31')
     portfolio = build_final_portfolio(weights,tickers,100)
     return portfolio 
@@ -272,11 +270,3 @@ def build_final_portfolio(optimal_weights,selected_ticker_vals,total_price):
         final_output.append(row)
 
     return final_output 
-
-
-# weights,tickers = value_filtering2(6,9,[0,4,1,1,1,1,1,1,1,1,1],'1d','2024-5-20','2024-10-31')
-# print(weights)
-# portfolio = build_final_portfolio(weights,tickers,100)
-# print(portfolio)
-
-#remove print statements before pasting over 
